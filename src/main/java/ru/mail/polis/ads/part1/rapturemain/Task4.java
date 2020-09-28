@@ -9,6 +9,7 @@ public class Task4 {
             tail = new Bucket(size, null);
         }
 
+        private Bucket tail;
         int total = 0;
 
         public void clear() {
@@ -46,8 +47,6 @@ public class Task4 {
         public int size() {
             return total;
         }
-
-        private Bucket tail;
 
         private class Bucket {
             Bucket(int size, Bucket previous) {
