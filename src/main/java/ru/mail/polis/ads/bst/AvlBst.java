@@ -46,32 +46,38 @@ public class AvlBst<Key extends Comparable<Key>, Value> implements Bst<Key, Valu
         if (node == null) {
             return new Node(key, value, 1);
         }
-        if (key.compareTo(node.key) < 0) {
+        int compareResult = key.compareTo(node.key);
+        if (compareResult < 0) {
             node.left = put(node.left, key, value);
-        } else if (key.compareTo(node.key) > 0) {
+        } else if (compareResult > 0) {
             node.right = put(node.right, key, value);
         } else {
             node.value = value;
         }
-        node.height = 1 + Math.max(nullProtectedHeight(node.left), nullProtectedHeight(node.right));
+        node.height = 1 + nodeMaxChildrenHeight(node);
         node = balance(node);
         return node;
     }
 
     private Node balance(Node node) {
-        if (unbalancedValue(node) > 1) {
+        int unbalancedValue = unbalancedValue(node);
+        if (unbalancedValue > 1) {
             while (unbalancedValue(node.left) < 0) {
                 node.left = rotateLeft(node.left);
             }
             return rotateRight(node);
         }
-        if (unbalancedValue(node) < -1){
+        if (unbalancedValue < -1){
             while (unbalancedValue(node.right) > 0) {
                 node.right = rotateRight(node.right);
             }
             return rotateLeft(node);
         }
         return node;
+    }
+
+    private int nodeMaxChildrenHeight(Node node) {
+        return Math.max(nullProtectedHeight(node.left), nullProtectedHeight(node.right));
     }
 
     private int unbalancedValue(Node node) {
@@ -86,8 +92,8 @@ public class AvlBst<Key extends Comparable<Key>, Value> implements Bst<Key, Valu
         Node left = node.left;
         node.left = left.right;
         left.right = node;
-        node.height = 1 + Math.max(nullProtectedHeight(node.left), nullProtectedHeight(node.right));
-        left.height = 1 + Math.max(nullProtectedHeight(left.left), nullProtectedHeight(left.right));
+        node.height = 1 + nodeMaxChildrenHeight(node);
+        left.height = 1 + nodeMaxChildrenHeight(left);
         return left;
     }
 
@@ -95,8 +101,8 @@ public class AvlBst<Key extends Comparable<Key>, Value> implements Bst<Key, Valu
         Node right = node.right;
         node.right = right.left;
         right.left = node;
-        node.height = 1 + Math.max(nullProtectedHeight(node.left), nullProtectedHeight(node.right));
-        right.height = 1 + Math.max(nullProtectedHeight(right.left), nullProtectedHeight(right.right));
+        node.height = 1 + nodeMaxChildrenHeight(node);
+        right.height = 1 + nodeMaxChildrenHeight(right);
         return right;
     }
 
@@ -114,11 +120,12 @@ public class AvlBst<Key extends Comparable<Key>, Value> implements Bst<Key, Valu
         if (node == null) {
             return null;
         }
-        if (key.compareTo(node.key) < 0) {
+        int compareResult = key.compareTo(node.key);
+        if (compareResult < 0) {
             node.left = remove(node.left, key);
-        } else if (key.compareTo(node.key) > 0) {
+        } else if (compareResult > 0) {
             node.right = remove(node.right, key);
-        } else if (key.compareTo(node.key) == 0) {
+        } else {
             node = removeActual(node);
         }
         return node;
