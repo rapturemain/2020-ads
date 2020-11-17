@@ -31,8 +31,9 @@ public class AvlBst<Key extends Comparable<Key>, Value> implements Bst<Key, Valu
 
     public Node getNode(Key key) {
         Node node = root;
-        while (node != null && !node.key.equals(key)) {
-            node = node.key.compareTo(key) > 0 ? node.left : node.right;
+        int compareResult;
+        while (node != null && (compareResult = node.key.compareTo(key)) != 0) {
+            node = compareResult > 0 ? node.left : node.right;
         }
         return node;
     }
@@ -138,7 +139,6 @@ public class AvlBst<Key extends Comparable<Key>, Value> implements Bst<Key, Valu
         if (node.left == null) {
             return node.right;
         }
-
         Node buffer = node;
         node = min(buffer.right);
         node.right = removeMin(buffer.right);
@@ -147,8 +147,9 @@ public class AvlBst<Key extends Comparable<Key>, Value> implements Bst<Key, Valu
     }
 
     private Node removeMin(Node node) {
-        if (node.left == null)
+        if (node.left == null) {
             return node.right;
+        }
         node.left = removeMin(node.left);
         return node;
     }
