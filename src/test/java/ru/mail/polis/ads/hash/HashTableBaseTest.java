@@ -40,13 +40,11 @@ class HashTableBaseTest {
     }
     
     HashTable<String, String> newTable() {
-        // Use implementation
-        return null;
+        return new HashTableImpl<>();
     }
     
     HashTable<Key, String> newStrangeKeyTable() {
-        // Use implementation
-        return null;
+        return new HashTableImpl<>();
     }
 
     @Test
@@ -253,8 +251,27 @@ class HashTableBaseTest {
             reference.put(key, value);
         }
         assertEquals(reference.size(), table.size());
-        for (Map.Entry<Key, String> entry: reference.entrySet()) {
+        for (Map.Entry<Key, String> entry : reference.entrySet()) {
             assertEquals(entry.getValue(), table.get(new Key(entry.getKey().value)));
         }
+    }
+
+    void resize() {
+        HashTable<String, String> table = new HashTableImpl<>(16, 2);
+
+        final int ENTRIES = 5000;
+        for (int i = 0; i < ENTRIES; i++) {
+            table.put("testStringKey" + i, "testStringValue" + i);
+        }
+
+        int size = table.size();
+
+        for (int i = ENTRIES - 1; i >= 0; i--) {
+            assertEquals(table.remove("testStringKey" + i), "testStringValue" + i);
+            assertEquals(table.size(), --size);
+            assertFalse(table.containsKey("testStringKey" + i));
+        }
+
+        assertTrue(table.isEmpty());
     }
 }
