@@ -7,6 +7,8 @@ import java.util.Objects;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -257,9 +259,9 @@ class HashTableBaseTest {
     }
 
     void resize() {
-        HashTable<String, String> table = new HashTableImpl<>(16, 2);
+        HashTable<String, String> table = new HashTableImpl<>();
 
-        final int ENTRIES = 5000;
+        final int ENTRIES = 500000;
         for (int i = 0; i < ENTRIES; i++) {
             table.put("testStringKey" + i, "testStringValue" + i);
         }
