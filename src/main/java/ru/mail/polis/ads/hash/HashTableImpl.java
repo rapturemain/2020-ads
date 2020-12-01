@@ -96,11 +96,7 @@ public class HashTableImpl<K, V> implements HashTable<K, V> {
         // we cannot resize more, if we are not we can try to use it
         if (tableSize >= MAX_SIZE) {
             threshold = Integer.MAX_VALUE;
-            if (!usingIdentityHashCode) {
-                usingIdentityHashCode = true;
-            } else {
-                return;
-            }
+            return;
         } else {
             tableSize <<= 1;
             threshold = (int) (tableSize * FACTOR);
@@ -173,6 +169,6 @@ public class HashTableImpl<K, V> implements HashTable<K, V> {
     }
 
     private int hashCode(K key) {
-        return (usingIdentityHashCode ? System.identityHashCode(key) : key.hashCode()) & (tableSize - 1);
+        return key.hashCode() & (tableSize - 1);
     }
 }
